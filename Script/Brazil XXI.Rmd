@@ -58,32 +58,56 @@ economic_indicators <- read_csv("/Users/MAC/Documents/Ambiente R/Brasil Inicio S
 gdp_per_capita_ppp <- Sustain_developm_goal %>%
   filter(`Series Code`=="NY.GDP.PCAP.PP.CD") %>%
   select(`Country Name`, `2001 [YR2001]`:`2018 [YR2018]`)
+gdp_per_capita_ppp$`Country Name` <- gsub("Brazil", "Brasil", gdp_per_capita_ppp$`Country Name`)
+gdp_per_capita_ppp$`Country Name` <- gsub("World", "Mundo", gdp_per_capita_ppp$`Country Name`)
 
 gini <- Poverty_equity %>%
   filter(`Series Code`=="SI.POV.GINI") %>%
   select(`Country Name`, `2001 [YR2001]`:`2017 [YR2017]`)
+gini$`Country Name` <- gsub("Brazil", "Brasil", gini$`Country Name`)
+gini$`Country Name` <- gsub("World", "Mundo", gini$`Country Name`)
+
 
 hdi <- select(Human_develop_index, "Country", "2001":"2018")
+hdi$Country <- gsub("Brazil", "Brasil", hdi$Country)
+hdi$Country <- gsub("World", "Mundo", hdi$Country)
+
 
 access_eletricity <- Environm_social_governm %>%
   filter(`Series Code` == "EG.ELC.ACCS.ZS") %>%
   select(`Country Name`, `2001 [YR2001]`:`2017 [YR2017]`)
+access_eletricity$`Country Name` <- gsub("Brazil", "Brasil", access_eletricity$`Country Name`)
+access_eletricity$`Country Name` <- gsub("World", "Mundo", access_eletricity$`Country Name`)
+
 
 government_effectiveness <- Environm_social_governm %>%
   filter(`Series Code` == "GE.EST") %>%
   select(`Country Name`, `2002 [YR2002]`:`2017 [YR2017]`)
+government_effectiveness$`Country Name` <- gsub("Brazil", "Brasil", government_effectiveness$`Country Name`)
+government_effectiveness$`Country Name` <- gsub("World", "Mundo", government_effectiveness$`Country Name`)
+
 
 internet <- Environm_social_governm %>%
   filter(`Series Code` == "IT.NET.USER.ZS") %>%
   select(`Country Name`, `2001 [YR2001]`:`2018 [YR2018]`)
+internet$`Country Name` <- gsub("Brazil", "Brasil", internet$`Country Name`)
+internet$`Country Name` <- gsub("World", "Mundo", internet$`Country Name`)
+
 
 basic_sanitation <- Sustain_developm_goal %>%
   filter(`Series Code` == "SH.STA.BASS.ZS")  %>%
   select(`Country Name`, `2001 [YR2001]`:`2017 [YR2017]`)
+basic_sanitation$`Country Name` <- gsub("Brazil", "Brasil", basic_sanitation$`Country Name`)
+basic_sanitation$`Country Name` <- gsub("World", "Mundo", basic_sanitation$`Country Name`)
+
+
 
 total_population <- Poverty_equity %>%
   filter(`Series Code` == "SP.POP.TOTL") %>%
   select(`Country Name`, `2001 [YR2001]`:`2017 [YR2017]`)
+total_population$`Country Name` <- gsub("Brazil", "Brasil", total_population$`Country Name`)
+total_population$`Country Name` <- gsub("World", "Mundo", total_population$`Country Name`)
+
 
 # Checando os datasets
 
@@ -100,6 +124,7 @@ str(total_population)
 # Transformando HDI de 'character' para 'double'
 hdi[ , c(2:19)] <- lapply(hdi[c(2:19)], as.double)
 
+
 # Renomeando as colunas de anos
 colnames(gini)[2:18] <- '2001':'2017'
 colnames(gdp_per_capita_ppp)[2:19] <- '2001':'2018'
@@ -108,7 +133,6 @@ colnames(government_effectiveness)[2:17] <- '2002':'2017'
 colnames(internet)[2:19] <- '2001':'2018'
 colnames(basic_sanitation)[2:18] <- '2001':'2017'
 colnames(total_population)[2:18] <- '2001':'2017'
-
 
 
 ```
@@ -195,17 +219,18 @@ describe(hdi)
 
 
 # Reorganizando os datasets
-hdi <- hdi %>% 
+hdi_2 <- hdi %>% 
   gather(Year, Index, `2001`:`2018`) %>%
   arrange(Country) %>%
   na.omit()
+
 
 hdi_indice <- hdi_indice %>% 
   gather(Year, Index, `2001`:`2018`) %>%
   arrange(Country) %>%
   na.omit()
 
-gdp_per_capita_ppp <- gdp_per_capita_ppp %>% 
+gdp_per_capita_ppp_2 <- gdp_per_capita_ppp %>% 
   gather(Year, Index, `2001`:`2018`) %>%
   arrange(`Country Name`) %>%
   na.omit()
@@ -215,17 +240,18 @@ gdp_indice <- gdp_indice %>%
   arrange(`Country Name`) %>%
   na.omit()
 
-gini <- gini %>% 
+gini_2 <- gini %>% 
   gather(Year, Index, `2001`:`2017`) %>%
   arrange(`Country Name`) %>%
   na.omit()
+
 
 gini_indice <- gini_indice %>% 
   gather(Year, Index, `2001`:`2017`) %>%
   arrange(`Country Name`) %>%
   na.omit()
 
-access_eletricity <- access_eletricity %>% 
+access_eletricity_2 <- access_eletricity %>% 
   gather(Year, Index, `2001`:`2017`) %>%
   arrange(`Country Name`) %>%
   na.omit()
@@ -235,12 +261,12 @@ eletricity_indice <- eletricity_indice %>%
   arrange(`Country Name`) %>%
   na.omit()
 
-government_effectiveness <- government_effectiveness %>% 
+government_effectiveness_2 <- government_effectiveness %>% 
   gather(Year, Index, `2002`:`2017`) %>%
   arrange(`Country Name`) %>%
   na.omit()
 
-internet <- internet %>% 
+internet_2 <- internet %>% 
   gather(Year, Index, `2001`:`2018`) %>%
   arrange(`Country Name`) %>%
   na.omit()
@@ -250,7 +276,7 @@ internet_indice <- internet_indice %>%
   arrange(`Country Name`) %>%
   na.omit()
 
-basic_sanitation <- basic_sanitation %>% 
+basic_sanitation_2 <- basic_sanitation %>% 
   gather(Year, Index, `2001`:`2017`) %>%
   arrange(`Country Name`) %>%
   na.omit()
@@ -260,7 +286,7 @@ sanitation_indice <- sanitation_indice %>%
   arrange(`Country Name`) %>%
   na.omit()
 
-total_population <- total_population %>% 
+total_population_2 <- total_population %>% 
   gather(Year, Index, `2001`:`2017`) %>%
   arrange(`Country Name`) %>%
   na.omit()
@@ -278,55 +304,368 @@ pop_indice <- pop_indice %>%
 
 
 
-# Keep only 3 names
+# Selecionando os países de interesse
+
 EVOL_HDI <- hdi %>% 
-  filter(Country %in% c("Brazil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "World"))
+  filter(Country %in% c("Brasil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "Mundo"))
 
 EVOL_HDI_INDICE <- hdi_indice %>% 
-  filter(Country %in% c("Brazil", "Colombia", "Mexico", "Russia", "South Africa", "World"))
+  filter(Country %in% c("Brasil", "Colombia", "Mexico", "Russia", "South Africa", "Mundo"))
 
 EVOL_GINI <- gini %>% 
-  filter(`Country Name` %in% c("Brazil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "World"))
+  filter(`Country Name` %in% c("Brasil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey"))
 
 EVOL_GINI_INDICE <- gini_indice %>% 
-   filter(`Country Name` %in% c("Brazil", "Colombia", "Mexico", "Russia", "South Africa", "World"))
+   filter(`Country Name` %in% c("Brasil", "Colombia", "Mexico", "Russia", "South Africa"))
 
 EVOL_GDP_PC <- gdp_per_capita_ppp %>%
-  filter(`Country Name` %in% c("Brazil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "World"))
+  filter(`Country Name` %in% c("Brasil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "Mundo"))
 
 EVOL_GDP_PC_INDICE <- gdp_indice %>%
-   filter(`Country Name` %in% c("Brazil", "Colombia", "Mexico", "Russia", "South Africa", "World"))
+   filter(`Country Name` %in% c("Brasil", "Colombia", "Mexico", "Russia", "South Africa", "Mundo"))
 
 EVOL_ACC_ELE <- access_eletricity %>%
-  filter(`Country Name` %in% c("Brazil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "World"))
+  filter(`Country Name` %in% c("Brasil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "Mundo"))
 
 EVOL_ACC_ELE_INDICE <- eletricity_indice %>%
-  filter(`Country Name` %in% c("Brazil", "Colombia", "Mexico", "Russia", "South Africa", "World"))
+  filter(`Country Name` %in% c("Brasil", "Colombia", "Mexico", "Russia", "South Africa", "Mundo"))
 
 GOV_EFE <- government_effectiveness %>%
-  filter(`Country Name` %in% c("Brazil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "World"))
+  filter(`Country Name` %in% c("Brasil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "Mundo"))
 
 INTER_ACC <- internet %>%
-  filter(`Country Name` %in% c("Brazil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "World"))
+  filter(`Country Name` %in% c("Brasil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "Mundo"))
 
 INTER_ACC_INDICE <- internet_indice %>%
-   filter(`Country Name` %in% c("Brazil", "Colombia", "Mexico", "Russia", "South Africa", "World"))
+   filter(`Country Name` %in% c("Brasil", "Colombia", "Mexico", "Russia", "South Africa", "Mundo"))
 
 BAS_SAN <- basic_sanitation %>%
-  filter(`Country Name` %in% c("Brazil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "World"))
+  filter(`Country Name` %in% c("Brasil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "Mundo"))
 
 BAS_SAN_INDICE <- sanitation_indice %>%
-  filter(`Country Name` %in% c("Brazil", "Colombia", "Mexico", "Russia", "South Africa", "World"))
+  filter(`Country Name` %in% c("Brasil", "Colombia", "Mexico", "Russia", "South Africa", "Mundo"))
 
 TOTAL_POP <- total_population %>%
-  filter(`Country Name` %in% c("Brazil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "World"))
+  filter(`Country Name` %in% c("Brasil", "Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey", "Mundo"))
 
 TOTAL_POP_INDICE <- pop_indice %>%
-    filter(`Country Name` %in% c("Brazil", "Colombia", "Mexico", "Russia", "South Africa", "Turkey", "World"))
+    filter(`Country Name` %in% c("Brasil", "Colombia", "Mexico", "Russia", "South Africa", "Turkey", "Mundo"))
 
 
-  
+
+
+ 
+# Agrupando os indices dos países similares
+
+sim_countries_hdi <- Human_develop_index %>% 
+  filter(Country %in% c("Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey")) %>%
+  select(`Country`, `2001`:`2018`)
+sim_countries_hdi[, 2:19] <- sapply(sim_countries_hdi[, 2:19], as.numeric)
+
+
+sim_countries_pop <- total_population %>% 
+  filter(`Country Name` %in% c("Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey"))
+
+sim_countries_san <- basic_sanitation %>% 
+  filter(`Country Name` %in% c("Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey"))
+
+sim_countries_inter <- internet %>% 
+  filter(`Country Name` %in% c("Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey"))
+
+sim_countries_ele <- access_eletricity %>% 
+  filter(`Country Name` %in% c("Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey"))
+
+sim_countries_gini <- gini %>% 
+  filter(`Country Name` %in% c("Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey"))
+
+sim_countries_gov <- government_effectiveness %>% 
+  filter(`Country Name` %in% c("Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey"))
+
+sim_countries_gdp <- gdp_per_capita_ppp %>% 
+  filter(`Country Name` %in% c("Colombia", "Indonesia", "Malaysia", "Mexico", "Philippines", "Russia", "South Africa", "Thailand", "Turkey"))
+
+
+# Calculando medias dos indices dos países similares
+
+sim_countries_gdp_mean <- plyr::colwise(mean)(sim_countries_gdp)
+sim_countries_gdp_mean[1,1] <- "Média países similares"
+
+sim_countries_ele_mean <- plyr::colwise(mean)(sim_countries_ele)
+sim_countries_ele_mean[1,1] <- "Média países similares"
+
+sim_countries_gini_mean <- plyr::colwise(mean)(sim_countries_gini)
+sim_countries_gini_mean[1,1] <- "Média países similares"
+
+sim_countries_gov_mean <- plyr::colwise(mean)(sim_countries_gov)
+sim_countries_gov_mean[1,1] <- "Média países similares"
+
+sim_countries_inter_mean <- plyr::colwise(mean)(sim_countries_inter)
+sim_countries_inter_mean[1,1] <- "Média países similares"
+
+sim_countries_hdi_mean <- plyr::colwise(mean)(sim_countries_hdi)
+sim_countries_hdi_mean[1,1] <- "Média países similares"
+
+sim_countries_san_mean <- plyr::colwise(mean)(sim_countries_san)
+sim_countries_san_mean[1,1] <- "Média países similares"
+
+sim_countries_pop_mean <- plyr::colwise(mean)(sim_countries_pop)
+sim_countries_pop_mean[1,1] <- "Média países similares"
+
+
+# Agrupando os indices do Brasil e do Mundo
+EVOL_GDP_BZ_WD <- gdp_per_capita_ppp %>%
+  filter(`Country Name` %in% c("Brasil", "Mundo"))
+
+EVOL_ACC_ELE_BZ_WD <- access_eletricity %>%
+  filter(`Country Name` %in% c("Brasil", "Mundo"))
+
+EVOL_POP_BZ_WD <- total_population %>%
+  filter(`Country Name` %in% c("Brasil", "Mundo"))
+
+EVOL_INTER_BZ_WD <- internet %>%
+  filter(`Country Name` %in% c("Brasil", "Mundo"))
+
+EVOL_SAN_BZ_WD <- basic_sanitation %>%
+  filter(`Country Name` %in% c("Brasil", "Mundo"))
+
+EVOL_GOV_BZ_WD <- government_effectiveness %>%
+  filter(`Country Name` %in% "Brasil")
+
+EVOL_HDI_BZ_WD <- hdi %>%
+  filter(`Country` %in% c("Brasil", "Mundo"))
+
+EVOL_GINI_BZ_WD <- gini %>%
+  filter(`Country Name` %in% "Brasil")
+
+
+
+
+# Agrupando os índices do Brasil, do Mundo e da média dos países similares
+
+media_bz_wd_sim_gdp <- bind_rows(EVOL_GDP_BZ_WD, sim_countries_gdp_mean)
+
+media_bz_wd_sim_ele <- bind_rows(EVOL_ACC_ELE_BZ_WD, sim_countries_ele_mean)
+
+media_bz_wd_sim_pop <- bind_rows(EVOL_POP_BZ_WD, sim_countries_pop_mean)
+
+media_bz_wd_sim_inter <- bind_rows(EVOL_INTER_BZ_WD, sim_countries_inter_mean)
+
+media_bz_wd_sim_san <- bind_rows(EVOL_SAN_BZ_WD, sim_countries_san_mean)
+
+media_bz_wd_sim_gov <- bind_rows(EVOL_GOV_BZ_WD, sim_countries_gov_mean)
+
+media_bz_wd_sim_hdi <- bind_rows(EVOL_HDI_BZ_WD, sim_countries_hdi_mean)
+
+media_bz_wd_sim_gini <- bind_rows(EVOL_GINI_BZ_WD, sim_countries_gini_mean)
+
+
+
+
+
+# Reorganizando os datasets 2
+media_bz_wd_sim_gdp_2 <- media_bz_wd_sim_gdp %>%
+  gather(Ano, Index, `2001`:`2018`) %>% 
+  arrange(`Country Name`) %>% 
+  na.omit()
+
+media_bz_wd_sim_ele_2 <- media_bz_wd_sim_ele %>%
+  gather(Ano, Index, `2001`:`2017`) %>% 
+  arrange(`Country Name`) %>% 
+  na.omit()
+
+media_bz_wd_sim_pop_2 <- media_bz_wd_sim_pop %>%
+  gather(Ano, Index, `2001`:`2017`) %>% 
+  arrange(`Country Name`) %>% 
+  na.omit()
+
+media_bz_wd_sim_inter_2 <- media_bz_wd_sim_inter %>%
+  gather(Ano, Index, `2001`:`2018`) %>% 
+  arrange(`Country Name`) %>% 
+  na.omit()
+
+
+media_bz_wd_sim_san_2 <- media_bz_wd_sim_san %>%
+  gather(Ano, Index, `2001`:`2017`) %>% 
+  arrange(`Country Name`) %>% 
+  na.omit()
+
+media_bz_wd_sim_gov_2 <- media_bz_wd_sim_gov %>%
+  gather(Ano, Index, `2002`:`2017`) %>% 
+  arrange(`Country Name`) %>% 
+  na.omit()
+
+media_bz_wd_sim_hdi_2 <- media_bz_wd_sim_hdi %>%
+  gather(Ano, Index, `2001`:`2018`) %>% 
+  arrange(`Country`) %>% 
+  na.omit()
+
+media_bz_wd_sim_gini_2 <- media_bz_wd_sim_gini %>%
+  gather(Ano, Index, `2001`:`2017`) %>% 
+  arrange(`Country Name`) %>% 
+  na.omit()
+
+EVOL_GINI_2 <- EVOL_GINI %>%
+  filter(`Country Name` %in% c("Brasil", "Colombia", "Indonesia", "Thailand", "Turkey")) %>%
+  gather(Ano, Index, `2001`:`2017`) %>% 
+  arrange(`Country Name`) %>% 
+  na.omit()
+
+
+
+```
+
+
+
+
+
+### 6. Gráficos
+
+```{r}
+
 # Plots
+
+media_bz_wd_sim_gdp_2 %>%
+   ggplot( aes(x=Ano, y=Index, group=`Country Name`, color=`Country Name`)) +
+    geom_line(size=0.9) +
+  scale_fill_gradientn(colours=rainbow(11)) + 
+  ggtitle("Evolução do PIB per capita", subtitle = "PIB per capita (PPP) em Dólares Internacionais (2001 - 2018)")   +
+  theme_fivethirtyeight() + 
+  theme(plot.title=element_text( hjust=0.5, vjust=0.5, face='bold'), plot.subtitle = element_text( hjust=0.5, vjust=0.5)) +
+   #theme(axis.title.y = element_text(angle = 90, color="black", size=8), axis.text.y = element_text(size = 5)) +
+   theme(legend.position = "bottom", axis.text.x = element_text(angle = 45, color="black", size=9, face=1), legend.title = element_blank()) #+
+  #facet_wrap(~`Country Name`)
+
+ ggsave("media_bz_wd_sim_gdp_2.png")
+ 
+ 
+ 
+ media_bz_wd_sim_ele_2 %>%
+   ggplot( aes(x=Ano, y=Index, group=`Country Name`, color=`Country Name`)) +
+    geom_line(size=0.9) +
+  scale_fill_gradientn(colours=rainbow(11)) + 
+  ggtitle("Evolução do Acesso à Eletricidade", subtitle = "Em percentual da população (2001 - 2017)")   +
+  theme_fivethirtyeight() + 
+  theme(plot.title=element_text( hjust=0.5, vjust=0.5, face='bold'), plot.subtitle = element_text( hjust=0.5, vjust=0.5)) +
+   #theme(axis.title.y = element_text(angle = 90, color="black", size=8), axis.text.y = element_text(size = 5)) +
+   theme(legend.position = "bottom", axis.text.x = element_text(angle = 45, color="black", size=9, face=1), legend.title = element_blank()) #+
+  #facet_wrap(~`Country Name`)
+
+ ggsave("media_bz_wd_sim_ele_2.png")
+ 
+ 
+media_bz_wd_sim_pop_2 %>%
+   ggplot( aes(x=Ano, y=Index, group=`Country Name`, color=`Country Name`)) +
+    geom_line(size=0.9) +
+  scale_fill_gradientn(colours=rainbow(11)) + 
+  ggtitle("Evolução do Tamanho da População", subtitle = "(2001 - 2017)")   +
+  theme_fivethirtyeight() + 
+  theme(plot.title=element_text( hjust=0.5, vjust=0.5, face='bold'), plot.subtitle = element_text( hjust=0.5, vjust=0.5)) +
+   #theme(axis.title.y = element_text(angle = 90, color="black", size=8), axis.text.y = element_text(size = 5)) +
+   theme(legend.position = "bottom", axis.text.x = element_text(angle = 45, color="black", size=9, face=1), legend.title = element_blank()) #+
+  #facet_wrap(~`Country Name`)
+
+ ggsave("media_bz_wd_sim_pop_2.png")
+ 
+ 
+media_bz_wd_sim_inter_2 %>%
+   ggplot( aes(x=Ano, y=Index, group=`Country Name`, color=`Country Name`)) +
+    geom_line(size=0.9) +
+  scale_fill_gradientn(colours=rainbow(11)) + 
+  ggtitle("Evolução do Acesso à Internet", subtitle = "Em percentual da população (2001 - 2017)")   +
+  theme_fivethirtyeight() + 
+  theme(plot.title=element_text( hjust=0.5, vjust=0.5, face='bold'), plot.subtitle = element_text( hjust=0.5, vjust=0.5)) +
+   #theme(axis.title.y = element_text(angle = 90, color="black", size=8), axis.text.y = element_text(size = 5)) +
+   theme(legend.position = "bottom", axis.text.x = element_text(angle = 45, color="black", size=9, face=1), legend.title = element_blank()) #+
+  #facet_wrap(~`Country Name`)
+
+ ggsave("media_bz_wd_sim_inter_2.png")
+ 
+ 
+ media_bz_wd_sim_san_2 %>%
+   ggplot( aes(x=Ano, y=Index, group=`Country Name`, color=`Country Name`)) +
+    geom_line(size=0.9) +
+  scale_fill_gradientn(colours=rainbow(11)) + 
+  ggtitle("Evolução do Acesso a Instalações Sanitárias Básicas", subtitle = "Em percentual da população (2001 - 2017)")   +
+  theme_fivethirtyeight() + 
+  theme(plot.title=element_text( hjust=0.5, vjust=0.5, face='bold'), plot.subtitle = element_text( hjust=0.5, vjust=0.5)) +
+   #theme(axis.title.y = element_text(angle = 90, color="black", size=8), axis.text.y = element_text(size = 5)) +
+   theme(legend.position = "bottom", axis.text.x = element_text(angle = 45, color="black", size=9, face=1), legend.title = element_blank()) #+
+  #facet_wrap(~`Country Name`)
+
+ ggsave("media_bz_wd_sim_san_2.png")
+ 
+ 
+  media_bz_wd_sim_gov_2  %>%
+   ggplot( aes(x=Ano, y=Index, group=`Country Name`, color=`Country Name`)) +
+    geom_line(size=0.9) +
+  scale_fill_gradientn(colours=rainbow(11)) + 
+  ggtitle("Evolução da Efetividade do Governo", subtitle = "Percepção da população na escala de -2,5 a +2,5 (2002 - 2017)")   +
+  theme_fivethirtyeight() + 
+  theme(plot.title=element_text( hjust=0.5, vjust=0.5, face='bold'), plot.subtitle = element_text( hjust=0.5, vjust=0.5)) +
+   #theme(axis.title.y = element_text(angle = 90, color="black", size=8), axis.text.y = element_text(size = 5)) +
+   theme(legend.position = "bottom", axis.text.x = element_text(angle = 45, color="black", size=9, face=1), legend.title = element_blank()) #+
+  #facet_wrap(~`Country Name`)
+
+ ggsave("media_bz_wd_sim_gov_2.png")
+ 
+ 
+ media_bz_wd_sim_hdi_2  %>%
+   ggplot( aes(x=Ano, y=Index, group=`Country`, color=`Country`)) +
+    geom_line(size=0.9) +
+  scale_fill_gradientn(colours=rainbow(11)) + 
+  ggtitle("Evolução do Índice de Desenvolvimento Humano", subtitle = "(2001 - 2018)")   +
+  theme_fivethirtyeight() + 
+  theme(plot.title=element_text( hjust=0.5, vjust=0.5, face='bold'), plot.subtitle = element_text( hjust=0.5, vjust=0.5)) +
+   #theme(axis.title.y = element_text(angle = 90, color="black", size=8), axis.text.y = element_text(size = 5)) +
+   theme(legend.position = "bottom", axis.text.x = element_text(angle = 45, color="black", size=9, face=1), legend.title = element_blank()) #+
+  #facet_wrap(~`Country Name`)
+
+ ggsave("media_bz_wd_sim_hdi_2.png")
+ 
+ 
+ 
+ 
+  EVOL_GINI_2  %>%
+   ggplot( aes(x=Ano, y=Index, group=`Country Name`, color=`Country Name`)) +
+    geom_line(size=0.9) +
+  scale_fill_gradientn(colours=rainbow(11)) + 
+  ggtitle("Evolução do Índice de Gini", subtitle = "(2001 - 2017)")   +
+  theme_fivethirtyeight() + 
+  theme(plot.title=element_text( hjust=0.5, vjust=0.5, face='bold'), plot.subtitle = element_text( hjust=0.5, vjust=0.5)) +
+   #theme(axis.title.y = element_text(angle = 90, color="black", size=8), axis.text.y = element_text(size = 5)) +
+   theme(legend.position = "bottom", axis.text.x = element_text(angle = 45, color="black", size=9, face=1), legend.title = element_blank()) #+
+  #facet_wrap(~`Country Name`)
+
+ ggsave("evol_gini_2.png")
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+media %>%
+   ggplot( aes(x=Ano, y=Index, group=`Country Name`, color=`Country Name`)) +
+    geom_line(size=0.9) +
+  scale_fill_gradientn(colours=rainbow(11)) + 
+  ggtitle("Evolução do Acesso à Eletricidade", subtitle = "Em percentual da população (2001 - 2017)")   +
+  theme_fivethirtyeight() + 
+  theme(plot.title=element_text( hjust=0.5, vjust=0.5, face='bold'), plot.subtitle = element_text( hjust=0.5, vjust=0.5)) +
+   #theme(axis.title.y = element_text(angle = 90, color="black", size=8), axis.text.y = element_text(size = 5)) +
+   theme(legend.position = "bottom", axis.text.x = element_text(angle = 45, color="black", size=9, face=1), legend.title = element_blank()) #+
+  #facet_wrap(~`Country Name`)
+
+ ggsave("media_bz_wd_sim_ele_2.png")
+
+
+
+
+
+
+
 EVOL_HDI %>%
   ggplot( aes(x=Year, y=Index, group=Country, color=Country)) +
     geom_line(size=0.9) +
@@ -409,6 +748,8 @@ EVOL_GDP_PC_INDICE %>%
     face=1))
 
  ggsave("evol_gd_pc_indice.png")
+ 
+ 
 
 EVOL_ACC_ELE %>%
   ggplot( aes(x=Year, y=Index, group=`Country Name`, color=`Country Name`)) +
@@ -540,13 +881,7 @@ TOTAL_POP_INDICE %>%
 
 
 
-
-
-
-
 ```
-
-
 
 
 
